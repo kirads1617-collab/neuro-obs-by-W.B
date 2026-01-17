@@ -3,6 +3,7 @@ import { useWizard } from '../../context/WizardContext';
 import { Printer, RefreshCw } from 'lucide-react';
 import '../ui/Form.css';
 import './Summary.css';
+import AnalysisSection from './AnalysisSection';
 
 export default function SummaryView() {
     const { formData, resetWizard, steps } = useWizard();
@@ -114,6 +115,8 @@ export default function SummaryView() {
                         </section>
                     );
                 })}
+
+                <AnalysisSection />
             </div>
 
             {/* Footer Actions */}

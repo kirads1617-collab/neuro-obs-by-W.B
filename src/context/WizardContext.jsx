@@ -9,6 +9,9 @@ export function WizardProvider({ children }) {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [formData, setFormData] = useState({});
     const [isLoaded, setIsLoaded] = useState(false);
+    const [analysisResult, setAnalysisResult] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [analysisError, setAnalysisError] = useState(null);
 
     // Load from local storage on mount
     useEffect(() => {
@@ -103,7 +106,13 @@ export function WizardProvider({ children }) {
         isLastStep, // This means last INPUT step
         isFirstStep,
         checkStepValidity,
-        isLoaded
+        isLoaded,
+        analysisResult,
+        setAnalysisResult,
+        isAnalyzing,
+        setIsAnalyzing,
+        analysisError,
+        setAnalysisError
     };
 
     return (
