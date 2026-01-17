@@ -67,10 +67,14 @@ export default function Layout({ children }) {
                             onClick={() => handleStepClick(step.id, index)}
                             className={cn(
                                 "step-item",
+                                !isSummaryView && currentStepIndex === index && "active",
                                 !isSummaryView && "hover:bg-slate-100" // Simple hover effect
                             )}
                         >
-                            <Circle size={18} className="text-slate-400" />
+                            <Circle size={18} className={cn(
+                                "transition-colors",
+                                currentStepIndex === index ? "text-blue-500 fill-blue-500" : "text-slate-400"
+                            )} />
                             <span className="text-left">{step.title}</span>
                         </button>
                     ))}
@@ -84,7 +88,7 @@ export default function Layout({ children }) {
                             isSummaryView && "active"
                         )}
                     >
-                        <FileText size={18} />
+                        <FileText size={18} className={isSummaryView ? "text-blue-500" : "text-slate-400"} />
                         <span>Rapport & Conclusion</span>
                     </button>
                 </nav>
@@ -93,16 +97,29 @@ export default function Layout({ children }) {
             {/* Main Content Area */}
             <div className="layout__content">
                 <header className="layout__header shadow-sm print:hidden">
-                    <button
-                        className="header__toggle"
-                        onClick={toggleSidebar}
-                        aria-label="Toggle Menu"
-                    >
-                        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            className="header__toggle"
+                            onClick={toggleSidebar}
+                            aria-label="Toggle Menu"
+                        >
+                            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+
+                        {!isSummaryView && (
+                            <div className="header__step-square">
+                                {currentStepIndex + 1}
+                            </div>
+                        )}
+                        {isSummaryView && (
+                            <div className="header__step-square summary">
+                                <FileText size={16} />
+                            </div>
+                        )}
+                    </div>
 
                     <div className="header__title">
-                        {isSummaryView ? 'Rapport Final' : 'Saisie Observation'}
+                        {isSummaryView ? 'Rapport Final' : (steps[currentStepIndex]?.title || 'Saisie Observation')}
                     </div>
                 </header>
 

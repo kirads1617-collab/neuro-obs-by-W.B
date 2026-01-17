@@ -6,7 +6,7 @@ import { FileText } from 'lucide-react';
 import './Wizard.css';
 
 export default function Wizard() {
-    const { currentStepIndex, steps, goToStep } = useWizard();
+    const { currentStepIndex, steps, goToStep, setCurrentStepIndex } = useWizard();
 
     // If index is equal to length, we show the summary
     const isSummary = currentStepIndex === steps.length;
@@ -15,6 +15,38 @@ export default function Wizard() {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [isSummary]);
+
+    // Scroll Spy: Update current step as user scrolls
+    useEffect(() => {
+        if (isSummary) return;
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px', // Trigger when section is in the upper part of the viewport
+            threshold: 0
+        };
+
+        const observerCallback = (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const index = steps.findIndex(s => s.id === entry.target.id);
+                    if (index !== -1) {
+                        setCurrentStepIndex(index);
+                    }
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+        // Observe all sections
+        steps.forEach(step => {
+            const el = document.getElementById(step.id);
+            if (el) observer.observe(el);
+        });
+
+        return () => observer.disconnect();
+    }, [steps, isSummary, setCurrentStepIndex]);
 
     if (isSummary) {
         return (

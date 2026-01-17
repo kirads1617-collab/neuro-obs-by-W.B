@@ -98,6 +98,7 @@ export function WizardProvider({ children }) {
         goToNextStep,
         goToPreviousStep,
         goToStep,
+        setCurrentStepIndex,
         resetWizard,
         isLastStep, // This means last INPUT step
         isFirstStep,
