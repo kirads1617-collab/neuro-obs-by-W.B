@@ -8,7 +8,7 @@ export const analyzeNeurologicalData = async (formData, steps) => {
         throw new Error("Clé API Gemini manquante. Veuillez configurer VITE_GEMINI_API_KEY dans votre fichier .env.");
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
     // Construct the prompt
     let observationSummary = "Observation Neurologique :\n\n";
@@ -53,7 +53,23 @@ export const analyzeNeurologicalData = async (formData, steps) => {
         const response = await result.response;
         return response.text();
     } catch (error) {
-        console.error("Gemini API Error:", error);
-        throw new Error("Une erreur est survenue lors de l'analyse avec l'IA. Veuillez vérifier votre connexion ou votre clé API.");
+        console.error("Gemini API Error details:", error);
+
+        // Extract meaningful error message
+        let errorMessage = "Une erreur est survenue lors de l'analyse avec l'IA.";
+
+        if (error.message) {
+            if (error.message.includes("API key not valid")) {
+                errorMessage = "Clé API non valide. Veuillez vérifier votre clé API Gemini.";
+            } else if (error.message.includes("quota")) {
+                errorMessage = "Quota épuisé. Veuillez réessayer plus tard ou vérifier votre forfait.";
+            } else if (error.message.includes("safety")) {
+                errorMessage = "L'analyse a été bloquée par les filtres de sécurité de l'IA.";
+            } else {
+                errorMessage = `Erreur IA : ${error.message}`;
+            }
+        }
+
+        throw new Error(errorMessage);
     }
 };
