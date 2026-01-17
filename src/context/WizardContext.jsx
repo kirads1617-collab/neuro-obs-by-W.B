@@ -8,6 +8,7 @@ const STORAGE_KEY = 'neuro_obs_data';
 export function WizardProvider({ children }) {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [formData, setFormData] = useState({});
+    const [isLoaded, setIsLoaded] = useState(false);
 
     // Load from local storage on mount
     useEffect(() => {
@@ -21,6 +22,7 @@ export function WizardProvider({ children }) {
                 console.error('Failed to load saved data', e);
             }
         }
+        setIsLoaded(true);
     }, []);
 
     // Save to local storage on change
@@ -99,7 +101,8 @@ export function WizardProvider({ children }) {
         resetWizard,
         isLastStep, // This means last INPUT step
         isFirstStep,
-        checkStepValidity
+        checkStepValidity,
+        isLoaded
     };
 
     return (
